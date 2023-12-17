@@ -1,15 +1,11 @@
-import React from "react";
+import { useCountDown } from "./useCountDown";
 
-interface CountDownProps {
-  text: string;
-  value: number;
-  onTap?: (event: React.MouseEvent<HTMLDivElement>) => void;
-}
-
-export const CountDown = ({ text, value, onTap }: CountDownProps) => {
+export const CountDown = () => {
+  const { toggle, value, isPaused, remains } = useCountDown({
+    time: 200,
+  });
   return (
     <div
-      onClick={onTap}
       className="radial-progress"
       style={
         { "--value": value, "--size": "15rem", "--thickness": "8px" } as Record<
@@ -17,9 +13,12 @@ export const CountDown = ({ text, value, onTap }: CountDownProps) => {
           string | number
         >
       }
+      onClick={toggle}
       role="progressbar"
     >
-      <p className="font-bold text-lg">{text}</p>
+      <p className="font-bold text-lg">
+        {!isPaused && value === 100 ? "Tap to start" : Math.floor(remains || 0)}
+      </p>
     </div>
   );
 };
