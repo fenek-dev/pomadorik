@@ -7,15 +7,16 @@ export default {
   },
   daisyui: {
     themes: [
-      {
-        mytheme: {
-          primary: "var(--primary-color)",
-          secondary: "var(--secondary-color)",
-          "base-100": "var(--base-color)",
-          success: "var(--success-color)",
-          error: "var(--error-color)",
-        },
-      },
+      "dark",
+      // {
+      //   base: {
+      //     primary: "#005f73",
+      //     secondary: "#e9c46a",
+      //     "base-100": "#e5989b",
+      //     success: "#2a9d8f",
+      //     error: "#e76f51",
+      //   },
+      // },
     ],
   },
   plugins: [daisyui],
