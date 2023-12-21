@@ -2,23 +2,29 @@ import { useCallback } from "react";
 import { Control } from "./Control";
 import { Timer } from "./Timer";
 import { useCountDown } from "./useCountDown";
-const initialTime = 1500;
-export const CountDown = () => {
-  const { isStopped, resetTo, time, toggle } = useCountDown(initialTime);
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/store/store";
 
-  const reset = useCallback(() => {
-    resetTo(initialTime);
-  }, []);
+export const CountDown = () => {
+  const timer = useSelector((state: RootState) => state.timer);
+  const { isStopped, resetTo, time, toggle } = useCountDown(
+    timer[timer.variant]
+  );
+
+  const reset = useCallback(
+    () => resetTo(timer[timer.variant]),
+    [timer.variant]
+  );
 
   return (
     <div className="flex flex-col gap-4">
       <Timer
-        initialTime={initialTime}
+        initialTime={timer[timer.variant]}
         isStopped={isStopped}
         time={time}
         toggle={toggle}
       />
-      <Control reset={reset} />
+      <Control reset={reset} setTime={resetTo} />
     </div>
   );
 };

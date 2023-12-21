@@ -1,0 +1,11 @@
+export enum TimerVariants {
+  POMADORO_TIME = "POMADORO_TIME",
+  LONG_REST_TIME = "LONG_REST_TIME",
+  SHORT_REST_TIME = "SHORT_REST_TIME",
+}
+
+export const VARIANT_TEXTS: Record<TimerVariants, string> = {
+  LONG_REST_TIME: "LONG REST",
+  POMADORO_TIME: "POMADORO",
+  SHORT_REST_TIME: "SHORT REST",
+};

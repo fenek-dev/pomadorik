@@ -7,3 +7,6 @@ export const secondsToHms = (time: number) => {
     seconds,
   };
 };
+
+export const secondsToMinutes = (time: number) =>
+  Math.floor((time % 3600) / 60);

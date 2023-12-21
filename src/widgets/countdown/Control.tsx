@@ -1,12 +1,31 @@
 import React from "react";
+import { secondsToMinutes } from "../../shared/utils";
+import {
+  TimerVariants,
+  VARIANT_TEXTS,
+} from "../../app/store/reducers/timer/timer.const";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../app/store/store";
+import { changeVariant } from "../../app/store/reducers/timer/timer.slice";
 
 interface ControlProps {
   reset: () => void;
+  setTime: (time: number) => void;
 }
 
-export const Control = React.memo(({ reset }: ControlProps) => {
+export const Control = React.memo(({ reset, setTime }: ControlProps) => {
+  const dispatch = useDispatch();
+  const timer = useSelector((state: RootState) => state.timer);
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.currentTarget.value as TimerVariants;
+
+    setTime(timer[value]);
+    dispatch(changeVariant(value));
+  };
+
   return (
-    <div>
+    <div className="flex gap-2">
       <button
         className="btn btn-circle"
         onClick={reset}
@@ -28,6 +47,17 @@ export const Control = React.memo(({ reset }: ControlProps) => {
           />
         </svg>
       </button>
+      <select
+        className="focus:outline-0 select select-ghost w-full max-w-xs border-0 text-center mr-2"
+        onChange={handleChange}
+        value={timer.variant}
+      >
+        {Object.values(TimerVariants).map((value) => (
+          <option className="uppercase" key={value} value={value}>
+            {VARIANT_TEXTS[value]} {secondsToMinutes(timer[value])} MIN
+          </option>
+        ))}
+      </select>
     </div>
   );
 });
