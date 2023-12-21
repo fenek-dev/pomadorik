@@ -1,25 +1,24 @@
+import { useCallback } from "react";
+import { Control } from "./Control";
+import { Timer } from "./Timer";
 import { useCountDown } from "./useCountDown";
-const initialTime = 10;
+const initialTime = 1500;
 export const CountDown = () => {
-  const { isStopped, resetTo, setTime, time, toggle } =
-    useCountDown(initialTime);
+  const { isStopped, resetTo, time, toggle } = useCountDown(initialTime);
+
+  const reset = useCallback(() => {
+    resetTo(initialTime);
+  }, []);
+
   return (
-    <div
-      className="radial-progress"
-      style={
-        { "--value": time, "--size": "15rem", "--thickness": "8px" } as Record<
-          string,
-          string | number
-        >
-      }
-      onClick={toggle}
-      role="progressbar"
-    >
-      <p className="font-bold text-lg">
-        {isStopped && time === initialTime
-          ? "Tap to start"
-          : Math.floor(time || 0)}
-      </p>
+    <div className="flex flex-col gap-4">
+      <Timer
+        initialTime={initialTime}
+        isStopped={isStopped}
+        time={time}
+        toggle={toggle}
+      />
+      <Control reset={reset} />
     </div>
   );
 };

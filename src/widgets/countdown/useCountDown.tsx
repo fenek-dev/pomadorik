@@ -11,25 +11,23 @@ export const useCountDown = (initialTime: number) => {
       interval = setInterval(
         () =>
           setTime((v) => {
-            if (v <= 0.2) {
+            if (v <= 0) {
               toggleStop();
               return v;
             }
-            return v - 0.1;
+            return v - 0.25;
           }),
-        100
+        250
       );
     }
     return () => {
-      console.log("hello", interval);
-
       clearInterval(interval);
     };
   }, [isStopped]);
 
   const resetTo = (time: number) => {
     setTime(time);
-    !isStopped && toggleStop();
+    toggleStop(true);
   };
 
   const toggle = () => {
