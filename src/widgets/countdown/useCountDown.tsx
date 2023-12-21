@@ -1,70 +1,46 @@
-import { useEffect } from "react";
-import {
-  BehaviorSubject,
-  NEVER,
-  Subject,
-  interval,
-  map,
-  share,
-  switchMap,
-  takeUntil,
-  takeWhile,
-} from "rxjs";
-import { useObservable } from "../../shared/hooks";
+import { useEffect, useState } from "react";
+import { useToggle } from "../../shared/hooks";
 
-const stop$ = new Subject();
-const isPaused$ = new BehaviorSubject(false);
-
-const timerValue$ = new BehaviorSubject(0);
-
-const timer$ = isPaused$.pipe(
-  switchMap((paused) => (paused ? NEVER : interval(100))),
-  map(() => {
-    const curr = timerValue$.getValue();
-    timerValue$.next(curr - 0.1);
-    return curr;
-  }),
-  takeWhile((v) => v >= 0),
-  takeUntil(stop$),
-  share()
-);
-
-const toggle = () => {
-  isPaused$.next(!isPaused$.getValue());
-};
-
-const restart = () => {
-  timerValue$.next(0);
-  isPaused$.next(false);
-};
-
-interface useCountDownArgs {
-  time: number;
-  initialText?: string;
-}
-
-export const useCountDown = ({ time }: useCountDownArgs) => {
-  const value = useObservable(timer$);
-  const isPaused = useObservable(isPaused$);
+export const useCountDown = (initialTime: number) => {
+  const [time, setTime] = useState(initialTime);
+  const [isStopped, toggleStop] = useToggle(true);
 
   useEffect(() => {
-    timerValue$.next(time);
-  }, [time]);
-
-  useEffect(() => {
-    console.log(value);
-
-    if (value && value <= 0) {
-      isPaused$.next(true);
-      timerValue$.next(time);
+    let interval: number | undefined;
+    if (!isStopped) {
+      interval = setInterval(
+        () =>
+          setTime((v) => {
+            if (v <= 0.2) {
+              toggleStop();
+              return v;
+            }
+            return v - 0.1;
+          }),
+        100
+      );
     }
-  }, [value, time]);
+    return () => {
+      console.log("hello", interval);
+
+      clearInterval(interval);
+    };
+  }, [isStopped]);
+
+  const resetTo = (time: number) => {
+    setTime(time);
+    !isStopped && toggleStop();
+  };
+
+  const toggle = () => {
+    if (time > 0 || !isStopped) toggleStop();
+  };
 
   return {
+    setTime,
     toggle,
-    restart,
-    value: ((value || 1) * 100) / time,
-    isPaused,
-    remains: value,
+    time,
+    resetTo,
+    isStopped,
   };
 };
