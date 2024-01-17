@@ -1,9 +1,9 @@
-import { CountDown } from "../widgets/countdown/CountDown";
+import { CountUp } from "../widgets/countdown/CountUp";
 
 export const MainPage = () => {
   return (
     <section className="flex justify-center items-center h-full">
-      <CountDown />
+      <CountUp />
     </section>
   );
 };

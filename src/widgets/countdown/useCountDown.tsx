@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useToggle } from "../../shared/hooks";
 
-export const useCountDown = (initialTime: number) => {
+export const useCountUp = (initialTime: number) => {
   const [time, setTime] = useState(initialTime);
-  const [isStopped, toggleStop] = useToggle(true);
+  const [isStopped, toggle] = useToggle(true);
 
   useEffect(() => {
     let interval: number | undefined;
@@ -11,13 +11,9 @@ export const useCountDown = (initialTime: number) => {
       interval = setInterval(
         () =>
           setTime((v) => {
-            if (v <= 0) {
-              toggleStop();
-              return v;
-            }
-            return v - 0.25;
+            return v + 0.1;
           }),
-        250
+        100
       );
     }
     return () => {
@@ -27,11 +23,7 @@ export const useCountDown = (initialTime: number) => {
 
   const resetTo = (time: number) => {
     setTime(time);
-    toggleStop(true);
-  };
-
-  const toggle = () => {
-    if (time > 0 || !isStopped) toggleStop();
+    toggle(true);
   };
 
   return {

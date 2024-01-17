@@ -17,12 +17,12 @@ export const Timer = ({ time, initialTime, isStopped, toggle }: TimerProps) => {
       className="radial-progress bg-primary bg-opacity-10 border-opacity-50 "
       style={
         {
-          "--value": (time / initialTime) * 100,
-          "--size": "15rem",
-          "--thickness": "8px",
+          "--value": ((time % initialTime) / initialTime) * 100,
+          "--size": "18rem",
+          "--thickness": "16px",
         } as AnyInlineStyleType
       }
-      onClick={toggle}
+      onClick={() => toggle()}
       role="progressbar"
     >
       <div>

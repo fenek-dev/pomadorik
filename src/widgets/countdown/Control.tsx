@@ -1,31 +1,13 @@
 import React from "react";
-import { secondsToMinutes } from "../../shared/utils";
-import {
-  TimerVariants,
-  VARIANT_TEXTS,
-} from "../../app/store/reducers/timer/timer.const";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../app/store/store";
-import { changeVariant } from "../../app/store/reducers/timer/timer.slice";
 
 interface ControlProps {
   reset: () => void;
-  setTime: (time: number) => void;
+  forward: () => void;
 }
 
-export const Control = React.memo(({ reset, setTime }: ControlProps) => {
-  const dispatch = useDispatch();
-  const timer = useSelector((state: RootState) => state.timer);
-
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.currentTarget.value as TimerVariants;
-
-    setTime(timer[value]);
-    dispatch(changeVariant(value));
-  };
-
+export const Control = React.memo(({ reset, forward }: ControlProps) => {
   return (
-    <div className="flex gap-2">
+    <div className="flex justify-evenly items-center">
       <button
         className="btn btn-circle"
         onClick={reset}
@@ -47,17 +29,22 @@ export const Control = React.memo(({ reset, setTime }: ControlProps) => {
           />
         </svg>
       </button>
-      <select
-        className="focus:outline-0 select select-ghost w-full max-w-xs border-0 text-center mr-2"
-        onChange={handleChange}
-        value={timer.variant}
+      <button
+        className="btn btn-circle"
+        onClick={forward}
+        title="Rest"
+        aria-label="Rest"
       >
-        {Object.values(TimerVariants).map((value) => (
-          <option className="uppercase" key={value} value={value}>
-            {VARIANT_TEXTS[value]} {secondsToMinutes(timer[value])} MIN
-          </option>
-        ))}
-      </select>
+        <svg
+          className="w-6 h-6 text-primary"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 12 16"
+        >
+          <path d="M11 0a1 1 0 0 0-1 1v5.7a2.028 2.028 0 0 0-.177-.194L3.33.732A2 2 0 0 0 0 2.227v11.546A1.977 1.977 0 0 0 1.181 15.6a1.982 1.982 0 0 0 2.147-.33l6.5-5.773A1.88 1.88 0 0 0 10 9.3V15a1 1 0 1 0 2 0V1a1 1 0 0 0-1-1Z" />
+        </svg>
+      </button>
     </div>
   );
 });
